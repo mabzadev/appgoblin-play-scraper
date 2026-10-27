@@ -4,7 +4,6 @@ from urllib.parse import quote
 from appgoblin_play_scraper.constants.element import ElementSpecs
 from appgoblin_play_scraper.constants.regex import Regex
 from appgoblin_play_scraper.constants.request import Formats
-from appgoblin_play_scraper.exceptions import NotFoundError
 from appgoblin_play_scraper.utils.request import get
 
 
@@ -21,11 +20,7 @@ def search(
 
     query = quote(query)
     url = Formats.Searchresults.build(query=query, lang=lang, country=country)
-    try:
-        dom = get(url, timeout=timeout, proxies=proxies)
-    except NotFoundError:
-        url = Formats.Searchresults.fallback_build(query=query, lang=lang)
-        dom = get(url, timeout=timeout, proxies=proxies)
+    dom = get(url, timeout=timeout, proxies=proxies)
 
     matches = Regex.SCRIPT.findall(dom)  # take out script blocks from dom
 

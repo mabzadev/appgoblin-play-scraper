@@ -3,7 +3,6 @@ import json
 from appgoblin_play_scraper.constants.element import ElementSpecs
 from appgoblin_play_scraper.constants.regex import Regex
 from appgoblin_play_scraper.constants.request import Formats
-from appgoblin_play_scraper.exceptions import NotFoundError
 from appgoblin_play_scraper.utils.request import get
 
 TV_PERMISSIONS = {
@@ -30,12 +29,7 @@ def app(
     proxies: dict[str, str] | None = None,
 ) -> dict:
     url = Formats.Detail.build(app_id=app_id, lang=lang, country=country)
-
-    try:
-        dom = get(url, timeout=timeout, proxies=proxies)
-    except NotFoundError:
-        url = Formats.Detail.fallback_build(app_id=app_id, lang=lang)
-        dom = get(url, timeout=timeout, proxies=proxies)
+    dom = get(url, timeout=timeout, proxies=proxies)
     return parse_dom(dom=dom, app_id=app_id, url=url)
 
 
